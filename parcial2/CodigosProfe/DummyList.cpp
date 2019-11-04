@@ -3,228 +3,129 @@
 using namespace std;
 
 template <typename T>
-class Nodo {
+class Node {
 public:
     T valor;
-    Nodo<T>* siguiente = nullptr;
+    Node<T>* sig = nullptr;
 };
 
 template <typename T>
-class Lista {
+class DummyList {
 public:
-    Lista() {
+    DummyList() {
     }
 
-    ~Lista(){
-        auto actual = cabeza;
+    ~DummyList(){
+        auto actual = head;
         while(actual) {
             auto temp = actual;
-            actual = actual->siguiente;
+            actual = actual->sig;
             delete temp;
         }
     }
 
-    void agregarInicio(T valor) {
-        auto siguienteNodo = new Nodo<T>;
-        siguienteNodo->valor = valor;
-        siguienteNodo->siguiente = cabeza;
-
-        cabeza = siguienteNodo;
-    }
-
-    void agregarFin(T valor) {
-        if(esVacia()) {
-            cabeza = new Nodo<T>;
-            cabeza->valor = valor;
+    void add(int pos, T valor) {
+        if(pos <= 0) {
+            pos = 0;
             return;
         }
 
-        auto actual = cabeza;
-        while(actual->siguiente != nullptr) {
-            actual = actual->siguiente;
-        }
-
-        auto nuevoNodo = new Nodo<T>;
-        nuevoNodo->valor = valor;
-        actual->siguiente = nuevoNodo;
-    }
-
-    void agregar(T valor, int posicion) {
-        if(esVacia()) {
-            cabeza = new Nodo<T>;
-            cabeza->valor = valor;
+        if(pos > size()) {
+            pos = size();
             return;
         }
 
-
-        if(posicion <= 0) {
-            agregarInicio(valor);
-            return;
-        }
-
-        if(posicion >= tamano()) {
-            agregarFin(valor);
-            return;
-        }
-
-        auto anterior = enesimoNodo(posicion-1);
-        auto nuevoNodo = new Nodo<T>;
-        nuevoNodo->valor = valor;
-        nuevoNodo->siguiente = anterior->siguiente;
-        anterior->siguiente = nuevoNodo;
+        auto anterior = enesimoNode(pos-1);
+        auto nuevoNode = new Node<T>;
+        nuevoNode->valor = valor;
+        nuevoNode->sig = anterior->sig;
+        anterior->sig = nuevoNode;
     }
 
-    bool esVacia() {
-        return !cabeza;
-    }
-
-    T sacarInicio() {
-        if(esVacia()) {
+    T pop(int pos) {
+        /*if(esVacia()) {
             return T();
-        }
+        }*/
 
-        auto viejaCabeza = cabeza;
-        auto resultado = viejaCabeza->valor;
-
-        cabeza = viejaCabeza->siguiente;
-        delete viejaCabeza;
-        return resultado;
-    }
-
-    T sacarFin() {
-        if(esVacia()) {
-            return T();
-        }
-
-        if(!cabeza->siguiente) {
-            auto viejaCabeza = cabeza;
-            cabeza = nullptr;
-            auto valor = cabeza->valor;
-            delete viejaCabeza;
-            return valor;
-        }
-
-        auto actual = cabeza;
-        while(actual->siguiente->siguiente != nullptr) {
-            actual = actual->siguiente;
-        }
-        auto penultimo = actual;
-
-        auto ultimo = penultimo->siguiente;
-        penultimo->siguiente = nullptr;
-
-        auto valor = ultimo->valor;
-        delete ultimo;
-        return valor;
-    }
-
-    T sacar(int posicion) {
-        if(esVacia()) {
-            return T();
-        }
-
-        if(posicion == 0) {
-            return sacarInicio();
-        }
-
-        auto anterior = enesimoNodo(posicion-1);
-        auto sacado = anterior->siguiente;
-        anterior->siguiente = sacado->siguiente;
+        auto anterior = enesimoNode(pos-1);
+        auto sacado = anterior->sig;
+        anterior->sig = sacado->sig;
         auto valor = sacado->valor;
         delete sacado;
         return valor;
     }
 
-    int tamano() {
+    bool esVacia() {
+        return !head->sig;
+    }
+
+    int size() {
         int cuenta = 0;
-        auto actual = cabeza;
+        auto actual = head;
         while(actual) {
             cuenta++;
-            actual = actual->siguiente;
+            actual = actual->sig;
         }
-        return cuenta;
+        return cuenta-1;
     }
 
     void imprimir() {
-       auto actual = cabeza;
+       auto actual = head->sig;
         while(actual) {
             cout << actual->valor << endl;
-            actual = actual->siguiente;
+            actual = actual->sig;
         }
     }
 
-    T valor(int posicion) {
+    T valor(int pos) {
         if(esVacia()) {
             return T();
         }
 
-        if( posicion < 0) {
-            posicion = 0;
+        if( pos < 0) {
+            pos = 0;
         }
-        int t = tamano();
-        if(posicion > t) {
-            posicion = t-1;
+        int t = size();
+        if(pos > t) {
+            pos = t-1;
         }
-        return enesimoNodo(posicion)->valor;
+        return enesimoNode(pos)->valor;
     }
 
 private:
+    Node<T>* enesimoNode(int n) {
+        if(n < 0) {
+            return head;
+        }
 
-    Nodo<T>* enesimoNodo(int n) {
-        int nodosPasados = 0;
-        auto actual = cabeza;
-        while(nodosPasados < n) {
-            nodosPasados++;
-            actual = actual->siguiente;
+        int NodesPasados = 0;
+        auto actual = head->sig;
+        while(NodesPasados < n) {
+            NodesPasados++;
+            actual = actual->sig;
         }
         return actual;
     }
 
-    Nodo<T>* cabeza = nullptr;
+    Node<T>* head = new Node<T>;
 };
-
-//int main()
-//{
-//    NodoEntero* cabezathis-> = nullptr;
-//    cout << cabeza << endl;
-//    cabeza = new NodoEntero;
-//    cout << cabeza << endl;
-//
-//    (*cabeza).entero = 10;
-//
-//    auto siguienteNodo = new NodoEntero;
-//    siguienteNodo->entero = 9;
-//
-//    cabeza->siguiente = siguienteNodo;
-//
-//    imprimir(cabeza);
-//
-//    return 0;
-//}
 
 int main()
 {
-    Lista<float> lista;
-    lista.agregarInicio(10.0);
-    lista.agregarInicio(20.0);
-    lista.agregarFin(30.0);
-    lista.agregar(40.0, 1);
-    lista.agregarFin(50.0);
+    DummyList<int> myList;
+    
+    //myList.add(0, 54);
+    myList.add(1, 8);
+    myList.add(2, 0);
+    myList.add(3, 1);
 
-    lista.imprimir();
+    myList.imprimir();
 
-    float sumatoria = 0.0;
-    for(int i = 0; i < lista.tamano(); ++i) {
-        sumatoria += lista.valor(i);
-    }
-    cout << "suma:" << sumatoria << endl;
+    cout << myList.size() << endl;
 
-    cout << "sacar" << lista.sacar(1) << endl;;
-    cout << "sacar" << lista.sacarInicio() << endl; // 10
-    cout << "sacar" << lista.sacarFin() << endl; // 30
-    cout << "sacar" << lista.sacarInicio() << endl; // 40
+    //cout << myList.pop(3) << endl;
 
-    cout << (lista.esVacia() ? "vacia" : "no vacia");
 
+    cin.get();
     return 0;
 }
