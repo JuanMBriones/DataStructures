@@ -6,13 +6,13 @@ enum Color {Rojo, Negro};
 
 struct Node
 {
-	int data;
+	int dato;
 	bool color;
 	Node *izquierda, *derecha, *padre;
 
-	Node(int data)
+	Node(int dato)
 	{
-	this->data = data;
+	this->dato = dato;
 	izquierda = derecha = padre = NULL;
 	this->color = Rojo;
 	}
@@ -39,7 +39,7 @@ void inorderHelper(Node *raiz)
 		return;
 
 	inorderHelper(raiz->izquierda);
-	cout << raiz->data << " ";
+	cout << raiz->dato << " ";
 	inorderHelper(raiz->derecha);
 }
 
@@ -48,12 +48,12 @@ Node* BSTinsertar(Node* raiz, Node *pt)
 	if (raiz == NULL)
 	return pt;
 
-	if (pt->data < raiz->data)
+	if (pt->dato < raiz->dato)
 	{
 		raiz->izquierda = BSTinsertar(raiz->izquierda, pt);
 		raiz->izquierda->padre = raiz;
 	}
-	else if (pt->data > raiz->data)
+	else if (pt->dato > raiz->dato)
 	{
 		raiz->derecha = BSTinsertar(raiz->derecha, pt);
 		raiz->derecha->padre = raiz;
@@ -73,7 +73,7 @@ void levelOrderHelper(Node *raiz)
 	while (!q.empty())
 	{
 		Node *temp = q.front();
-		cout << temp->data << " ";
+		cout << temp->dato << " ";
 		q.pop();
 
 		if (temp->izquierda != NULL)
@@ -204,9 +204,9 @@ void RBArbol::fixViolation(Node *&raiz, Node *&pt)
 	raiz->color = Negro;
 }
 
-void RBArbol::insertar(const int &data)
+void RBArbol::insertar(const int &dato)
 {
-	Node *pt = new Node(data);
+	Node *pt = new Node(dato);
 
 	raiz = BSTinsertar(raiz, pt);
 
