@@ -18,6 +18,15 @@ struct Node
 	}
 };
 
+string traductor(int n) {
+  if(n==0) {
+    return "R";
+  }
+  if(n==1) {
+    return "N";
+  }
+}
+
 class RBArbol
 {
 private:
@@ -39,7 +48,7 @@ void inorderHelper(Node *raiz)
 		return;
 
 	inorderHelper(raiz->izquierda);
-	cout << raiz->dato << " ";
+	cout << raiz->dato << traductor(raiz->color) << " ";
 	inorderHelper(raiz->derecha);
 }
 
@@ -73,7 +82,7 @@ void levelOrderHelper(Node *raiz)
 	while (!q.empty())
 	{
 		Node *temp = q.front();
-		cout << temp->dato << " ";
+		cout << temp->dato << traductor(temp->color) << " ";
 		q.pop();
 
 		if (temp->izquierda != NULL)
