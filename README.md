@@ -1,5 +1,3 @@
-# EstructurasDates3ro
+# DataStructures
 
-atm -> tests
-
-Listas de los 3 parciales 
+Some data structures that I used and learned, some of them are in C++ or in Python
